@@ -9,8 +9,7 @@ public class User {
     private String surname;
     private String login;
     private String password;
-    private String email;
-    private int debt;
+    private boolean isBlack;
 
     public int getId() {
         return id;
@@ -52,19 +51,19 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public boolean isBlack() {
+        return isBlack;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIsBlack(boolean isBlack) {
+        this.isBlack = isBlack;
     }
 
-    public int getDebt() {
-        return debt;
-    }
-
-    public void setDebt(int debt) {
-        this.debt = debt;
+    public void initUser(String name, String surname, String login, String password, boolean isBlack) {
+        this.name = name;
+        this.surname = surname;
+        this.login = login;
+        this.password = password;
+        this.isBlack = isBlack;
     }
 }

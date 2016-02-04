@@ -1,11 +1,10 @@
-<%@ page import="java.util.Iterator" %>
+<%@ page import="com.company.entity.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.company.entity.Product" %>
 <%--
   Created by IntelliJ IDEA.
   User: Ira
-  Date: 29.01.2016
-  Time: 20:49
+  Date: 02.02.2016
+  Time: 0:37
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,7 +16,7 @@
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-<title>Show DB</title>
+<title>Список пользователей</title>
 
 <!-- Bootstrap core CSS -->
 <link href="bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
@@ -35,21 +34,27 @@
 <![endif]-->
 </head>
 <body>
+
 <table border="1" width="303" class="table">
   <tr>
-    <td width="119"><b>Название товара</b></td>
-    <td width="168"><b>Стоимость, руб</b></td>
+    <td width="119"><b>Имя</b></td>
+    <td width="168"><b>Фамилия</b></td>
+    <td width="168"><b>Логин</b></td>
+    <td width="168"><b>В черном списке?</b></td>
   </tr>
-  <%  List<Product> data2 = (List)request.getAttribute("products");
-    for(Product product: data2){
+  <%  List<User> data = (List)request.getAttribute("users");
+    for(User user: data){
   %>
   <tr>
-    <td><%=product.getName()%></td>
-    <td><%=product.getPrice()%></td>
+    <td><%=user.getName()%></td>
+    <td><%=user.getSurname()%></td>
+    <td><%=user.getLogin()%></td>
+    <td><%=user.isBlack()%></td>
   </tr>
 
 
   <%}%>
 </table>
+
 </body>
 </html>

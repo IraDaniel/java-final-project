@@ -1,8 +1,8 @@
 package com.company;
 
 import com.company.connection.ConnectionPool;
-import com.company.connection.ConnectionPoolException;
 import com.company.entity.Product;
+import com.company.connection.ConnectionPoolSingleton;
 import com.company.mysql.MySQLProductDao;
 
 import javax.servlet.RequestDispatcher;
@@ -12,28 +12,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.List;
 
 /**
  * Created by Ira on 29.01.2016.
  */
-
-public class Controller extends HttpServlet {
+@WebServlet("/ProductsServlet")
+public class ProductsServlet extends HttpServlet {
     String page = "DataPage.jsp";
     private static final long serialVersionUID = 1L;
 
-    public Controller() {
+    public ProductsServlet() {
         super();
     }
 
     private List<Product> getProductList(){
-        ConnectionPool cp = new ConnectionPool();
-        cp.initPoolData();
-        Connection connection = cp.takeConnection();
-        MySQLProductDao mySQLProductDao = new MySQLProductDao(connection);
-        cp.closeConnection(connection);
+
+        MySQLProductDao mySQLProductDao = new MySQLProductDao();
+
         return mySQLProductDao.findAll();
     }
 
@@ -42,30 +39,30 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        PrintWriter out = response.getWriter();
+       // PrintWriter out = response.getWriter();
         List<Product> products = getProductList();
-      //  request.setAttribute("products", products);
-        response.setContentType("text/html");
+        request.setAttribute("products", products);
+       // response.setContentType("text/html");
 // Переходим на JSP страницу
 
-       // RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 
-     /*   if (dispatcher != null) {
+        if (dispatcher != null) {
             dispatcher.forward(request, response);
 
-        }*/
-        out.println("<html><head>");
+        }
+     /*   out.println("<html><head>");
 
         out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
 
         out.println("<title>Title</title>");
-        out.println("</head><body>");
+        out.println("</head><body>");*/
 
       //  System.out.println("!!!!!!!!!!!!!!" + products.get(1).toString());
 
        // out.println("<h1> Hello, world!!! </h1>");
-        out.println(products.get(1).getName());
-        out.println("</body></html>");
+      //  out.println(products.get(1).getName());
+     //   out.println("</body></html>");
 
 
 
@@ -75,7 +72,7 @@ public class Controller extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest();
+      //  processRequest();
 
     }
 

@@ -1,5 +1,8 @@
 package com.company.connection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.sql.SQLException;
 
 import java.sql.*;
@@ -17,7 +20,7 @@ import java.util.concurrent.Executor;
 public class ConnectionPool {
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
-
+    //public final Logger log = LogManager.getLogger( ConnectionPool.class);
     private String driverName;
     private String url;
     private String user;
@@ -55,9 +58,11 @@ public class ConnectionPool {
             }
 
         } catch (SQLException e) {
+           // log.warn("SQLException in ConnectionPool");
             e.printStackTrace();
            // throw new ConnectionPoolException("SQLException in ConnectionPool", e);
         } catch (ClassNotFoundException e) {
+          //  log.warn("Can't find database driver class");
             e.printStackTrace();
            // throw new ConnectionPoolException("Can't find database driver class", e);
 
@@ -90,6 +95,7 @@ public class ConnectionPool {
             connection = connectionQueue.take();
             givenAwayConQueue.add(connection);
         } catch (InterruptedException e) {
+          //  log.error("Error connecting to the data source.");
             e.printStackTrace();
          //   throw new ConnectionPoolException("Error connecting to the data source.", e);
         }
@@ -137,6 +143,7 @@ public class ConnectionPool {
         try {
             con.close();
         } catch (SQLException e) {
+           // log.error("Connection isn't return to the pool.");
             // logger.log(Level.ERROR, "Connection isn't return to the pool.");
         }
 

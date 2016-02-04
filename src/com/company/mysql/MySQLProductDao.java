@@ -13,22 +13,23 @@ import java.util.List;
 /**
  * Created by Ira on 29.01.2016.
  */
-public class MySQLProductDao implements ProductDao{
-    private Connection connection;
-    private Statement statement;
+public class MySQLProductDao extends CommonDao implements ProductDao{
 
-    public MySQLProductDao(Connection connection) {
-        this.connection = connection;
 
+    public MySQLProductDao() {
+      super();
     }
 
     public List<Product> findAll(){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         List<Product> products = new ArrayList<>();
         try {
+            connection = cp.takeConnection();
             String sql = "SELECT id,name,price FROM product ";
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-           // statement.
-            ResultSet resultSet = statement.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
                 Product product = new Product();
@@ -37,12 +38,11 @@ public class MySQLProductDao implements ProductDao{
                 product.setPrice(resultSet.getDouble("price"));
                 products.add(product);
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-
+            cp.closeConnection(connection,statement,resultSet);
         }
 
 
@@ -50,7 +50,26 @@ public class MySQLProductDao implements ProductDao{
     }
 
     public Product findById(int id){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         Product product = new Product();
+        try {
+            connection = cp.takeConnection();
+            String sql = "SELECT id,name,price FROM product where id = " + id;
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = statement.executeQuery(sql);
+            if(resultSet.first()){
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            cp.closeConnection(connection,statement,resultSet);
+        }
         return product;
     }
 
