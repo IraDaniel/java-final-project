@@ -1,4 +1,4 @@
-package com.company;
+package com.company.servlet.user;
 
 
 import javax.servlet.ServletException;
@@ -17,12 +17,13 @@ public class ExitServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        doPost(request,response);
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession httpSession = request.getSession(false);
-        //System.out.println(request.getServletPath());
         httpSession.invalidate();
         response.sendRedirect("enterPage.jsp");
 

@@ -35,26 +35,7 @@
 </head>
 <body>
 
-<table border="1" width="303" class="table">
-  <tr>
-    <td width="119"><b>Имя</b></td>
-    <td width="168"><b>Фамилия</b></td>
-    <td width="168"><b>Логин</b></td>
-    <td width="168"><b>В черном списке?</b></td>
-  </tr>
-  <%  List<User> data = (List)request.getAttribute("users");
-    for(User user: data){
-  %>
-  <tr>
-    <td><%=user.getName()%></td>
-    <td><%=user.getSurname()%></td>
-    <td><%=user.getLogin()%></td>
-    <td><%=user.isBlack()%></td>
-  </tr>
-
-
-  <%}%>
-</table>
+<p>admin</p>
 
 </body>
 </html>

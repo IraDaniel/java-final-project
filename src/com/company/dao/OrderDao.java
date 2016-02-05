@@ -9,14 +9,16 @@ import java.util.List;
  */
 public interface OrderDao {
 
-    Order findById();
+    public Order findById(int idOrder);
     List<Order> findAll();
 
-    void save(Order order);
+    int save(Order order);
 
     List<Order> findByIdUser(int idUser);
 
     void delete(int idOrder);
+
+    void updateInfo(int idOrder, int isPaid);
 
 
 }

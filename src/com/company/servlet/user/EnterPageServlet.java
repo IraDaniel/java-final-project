@@ -1,4 +1,4 @@
-package com.company;
+package com.company.servlet.user;
 
 import com.company.connection.ConnectionPool;
 import com.company.entity.Product;
@@ -26,23 +26,17 @@ public class EnterPageServlet extends HttpServlet {
 
     private MySQLUserDao mySQLMySQLUserDao;
     private MySQLProductDao mySQLProductDao;
+
     public EnterPageServlet() {
         super();
         mySQLMySQLUserDao = new MySQLUserDao();
         mySQLProductDao = new MySQLProductDao();
     }
 
-    private User checkUser(String login,String pass){
-        User user = mySQLMySQLUserDao.findByLoginPass(login,pass);
-        return user;
-    }
 
-    private List<Product> getProductList(){
-        mySQLProductDao = new MySQLProductDao();
-        return mySQLProductDao.findAll();
-    }
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        doPost(request, response);
 
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -50,37 +44,20 @@ public class EnterPageServlet extends HttpServlet {
 
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
+        // getParam
         String login = request.getParameterValues("login")[0];
         String password = request.getParameterValues("password")[0];
-        User user = checkUser(login, DigestUtils.md5Hex(password)); // Check user
+        //CheckUser
+        User user = mySQLMySQLUserDao.findByLoginPass(login, DigestUtils.md5Hex(password));
 
         if(user.getId()!=0){
-            HttpSession httpSession = request.getSession(true); // создали новую сессию
+            HttpSession httpSession = request.getSession(true); // create new session
             httpSession.setAttribute("user",user); // add user to session
-            httpSession.setAttribute("locale","ru"); // add location to session
-            request.setAttribute("user", user);
-            List<Product> products = getProductList();
-            request.setAttribute("products", products);
-          //  httpSession.setAttribute("products",products); // add to session
-            RequestDispatcher dispatcher = request.getRequestDispatcher("usebean.jsp");
-
-            if (dispatcher != null) {
-                dispatcher.forward(request, response);
-
-            }
+            //httpSession.setAttribute("locale","ru"); // add location to session
+            response.sendRedirect("UserProductList");
         }else{
-            RequestDispatcher dispatcher = request.getRequestDispatcher("enterPage.jsp");
-            if (dispatcher != null) {
-                dispatcher.forward(request, response);
-
-            }
+            response.sendRedirect("enterPage.jsp");
         }
-
-
-
-
-
-
 
     }
 

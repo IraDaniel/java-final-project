@@ -22,22 +22,51 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         super();
     }
 
-    public Order findById() {
-        return null;
+    public Order findById(int idOrder) {
+        Order order = new Order();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = cp.takeConnection();
+            String sql = "SELECT id,idProduct,number FROM `order` where id = " + idOrder;
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                order.setId(resultSet.getInt("id"));
+                order.setIdUser(resultSet.getInt("idUser"));
+                order.setIdProduct(resultSet.getInt("idProduct"));
+                order.setNumber(resultSet.getInt("number"));
+                if (resultSet.getInt("isPaid") == 1) {
+                    order.setIsPaid(true);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cp.closeConnection(connection, statement, resultSet);
+        }
+
+        return order;
     }
 
     public List<Order> findAll() {
         return null;
     }
 
-    // add new order
-    public void save(Order order) {
+    /**
+     * Add new order to database
+     * @param order
+     */
+    public int save(Order order) {
         Connection connection = null;
         Statement statement = null;
+        int id = 0;
         try {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            int id = getNextId("order");
+            id = getNextId("order");
             order.setId(id);
             int isPaid = 0;
             if (order.isPaid()) {
@@ -51,11 +80,15 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         } finally {
             cp.closeConnection(connection, statement);
         }
-
+        return id;
 
     }
 
-
+    /**
+     * Find order by id User
+     * @param idUser
+     * @return
+     */
     public List<Order> findByIdUser(int idUser) {
         List<Order> orderList = new ArrayList<>();
         Connection connection = null;
@@ -70,7 +103,7 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setId(resultSet.getInt("id"));
-                order.setIdUser(resultSet.getInt("idUser"));
+                order.setIdUser(idUser);
                 order.setIdProduct(resultSet.getInt("idProduct"));
                 order.setNumber(resultSet.getInt("number"));
                 if (resultSet.getInt("isPaid") == 1) {
@@ -87,6 +120,10 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         return orderList;
     }
 
+    /**
+     * Delete order by id
+     * @param idOrder
+     */
     public void delete(int idOrder){
         Connection connection = null;
         Statement statement = null;
@@ -100,6 +137,23 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         } finally {
             cp.closeConnection(connection, statement);
         }
+    }
+
+    public  void updateInfo(int idOrder, int isPaid){
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = cp.takeConnection();
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String sql = "update `order` set isPaid = " + 1 + " where id = " + idOrder;
+            // System.out.println(sql);
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cp.closeConnection(connection, statement);
+        }
+
     }
 
 }

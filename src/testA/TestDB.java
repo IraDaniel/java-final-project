@@ -4,6 +4,8 @@ import com.company.entity.Order;
 import com.company.mysql.MySQLOrderDao;
 import org.junit.Test;
 
+import java.util.List;
+
 
 /**
  * Created by Ira on 29.01.2016.
@@ -18,10 +20,13 @@ public class TestDB {
        // System.out.println(mySQLMySQLUserDao.findByLoginPass("ivan", "pass").getName());
 
         MySQLOrderDao mySQLOrderDao = new MySQLOrderDao();
-        Order order = new Order();
+        List<Order> basket = mySQLOrderDao.findByIdUser(9);
+        System.out.println(basket.size());
+       /* Order order = new Order();
         order.setId(1);
         order.initOrder(1,1,1,false);
         mySQLOrderDao.delete(1);
+        */
        // mySQLOrderDao.save(order);
         /*String name = "имя";
         String surname = "фамилия";

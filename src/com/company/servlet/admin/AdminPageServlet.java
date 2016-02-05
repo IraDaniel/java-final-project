@@ -1,4 +1,4 @@
-package com.company;
+package com.company.servlet.admin;
 
 import com.company.connection.ConnectionPool;
 import com.company.entity.User;
@@ -14,8 +14,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
+
 /**
- * Created by Ira on 02.02.2016.
+ *
  */
 
 @WebServlet("/AdminPageServlet")

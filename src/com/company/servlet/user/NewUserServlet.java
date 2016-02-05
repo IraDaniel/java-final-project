@@ -1,4 +1,4 @@
-package com.company;
+package com.company.servlet.user;
 
 import com.company.connection.ConnectionPool;
 import com.company.entity.Product;
@@ -19,13 +19,13 @@ import java.sql.Connection;
 import java.util.List;
 
 /**
- * Created by Ira on 29.01.2016.
+ * This Servlet performs adding new User
+ * Check data sent by user
+ * newUser.jsp
  */
 @WebServlet("/NewUserServlet")
 public class NewUserServlet extends HttpServlet {
 
-
-   // private static final long serialVersionUID = 1L;
     private MySQLUserDao mySQLMySQLUserDao;
     private MySQLProductDao mySQLProductDao;
 
@@ -36,14 +36,6 @@ public class NewUserServlet extends HttpServlet {
         mySQLProductDao = new MySQLProductDao();
     }
 
-
-    private void addNewUser(User user) {
-        mySQLMySQLUserDao.save(user);
-    }
-
-    private List<Product> getProductList() {
-        return mySQLProductDao.findAll();
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,13 +53,15 @@ public class NewUserServlet extends HttpServlet {
 
         User user = new User();
         user.initUser(name, surname, login, md5Pass, false);
-        addNewUser(user);
+        mySQLMySQLUserDao.save(user);
 
         if (user.getId() != 0) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
+            session.setAttribute("locale","ru");
             request.setAttribute("user", user);
-            List<Product> products = getProductList();
+            request.setAttribute("locale", "ru");
+            List<Product> products = mySQLProductDao.findAll();
             request.setAttribute("products", products);
             RequestDispatcher dispatcher = request.getRequestDispatcher("usebean.jsp");
 
@@ -76,11 +70,7 @@ public class NewUserServlet extends HttpServlet {
 
             }
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("enterPage.jsp");
-            if (dispatcher != null) {
-                dispatcher.forward(request, response);
-
-            }
+            response.sendRedirect("enterPage.jsp");
         }
 
     }

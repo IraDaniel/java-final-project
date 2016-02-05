@@ -1,9 +1,8 @@
-package com.company;
+package com.company.servlet.order;
 
 import com.company.entity.Order;
 import com.company.entity.User;
 import com.company.mysql.MySQLOrderDao;
-import com.company.mysql.MySQLUserDao;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,53 +12,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 /**
- * Created by Ira on 03.02.2016.
+ * Created by Ira on 04.02.2016.
  */
+@WebServlet("/BasketServlet")
+public class BasketServlet extends HttpServlet {
+    MySQLOrderDao mySQLOrderDao;
 
-/**
- * User push "buy"
- */
-@WebServlet("/OrderServlet")
-public class OrderServlet extends HttpServlet {
-    private MySQLOrderDao mySQLOrderDao;
-    private MySQLUserDao mySQLUserDao;
-
-    public OrderServlet() {
+    public BasketServlet() {
         super();
         mySQLOrderDao = new MySQLOrderDao();
-        mySQLUserDao = new MySQLUserDao();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        doPost(request,response);
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        if(session == null){
+        HttpSession httpSession = request.getSession(true);
+        if( httpSession == null){
             request.setCharacterEncoding("utf-8");
             RequestDispatcher dispatcher = request.getRequestDispatcher("enterPage.jsp");
             if (dispatcher != null) {
                 dispatcher.forward(request, response);
             }
         }
-        //TODO: Check, if user == null ?
-        User user = (User)session.getAttribute("user");
+        User user = (User)httpSession.getAttribute("user");
 
-
-        Integer idProduct = Integer.parseInt(request.getParameterValues("id")[0]);
-
-        Order order = new Order();
-        order.initOrder(user.getId(),idProduct,1,false);
-        mySQLOrderDao.save(order);
-        mySQLUserDao.updateInfo(user.getId(),1);
-
-        request.setCharacterEncoding("utf-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("orderPage.jsp");
-
+        List<Order> basket = mySQLOrderDao.findByIdUser(user.getId());
+        request.setAttribute("basket",basket);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("basketPage.jsp");
         if (dispatcher != null) {
             dispatcher.forward(request, response);
         }
