@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface OrderDao {
 
-    public Order findById(int idOrder);
+    Order findById(int idOrder);
     List<Order> findAll();
 
     int save(Order order);
@@ -19,6 +19,8 @@ public interface OrderDao {
     void delete(int idOrder);
 
     void updateInfo(int idOrder, int isPaid);
+
+    List<Order> findUnpaidOrderByIdUser(int idUser);
 
 
 }

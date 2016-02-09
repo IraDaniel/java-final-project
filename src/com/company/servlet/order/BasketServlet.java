@@ -36,16 +36,20 @@ public class BasketServlet extends HttpServlet {
         HttpSession httpSession = request.getSession(true);
         if( httpSession == null){
             request.setCharacterEncoding("utf-8");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("enterPage.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/enterPage.jsp");
             if (dispatcher != null) {
                 dispatcher.forward(request, response);
             }
         }
         User user = (User)httpSession.getAttribute("user");
+        if(user == null) {
+            response.sendRedirect("/page/startPage.jsp");
+            return;
+        }
 
-        List<Order> basket = mySQLOrderDao.findByIdUser(user.getId());
+        List<Order> basket = mySQLOrderDao.findUnpaidOrderByIdUser(user.getId());
         request.setAttribute("basket",basket);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("basketPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/basketPage.jsp");
         if (dispatcher != null) {
             dispatcher.forward(request, response);
         }

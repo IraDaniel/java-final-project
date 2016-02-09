@@ -12,7 +12,7 @@
 
         <welcome-file>index.htm</welcome-file>
 
-        <welcome-file>startPage.jsp</welcome-file>
+        <welcome-file>/page/startPage.jsp</welcome-file>
 
         <welcome-file>default.html</welcome-file>
 

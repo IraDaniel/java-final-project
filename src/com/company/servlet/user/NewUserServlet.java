@@ -1,13 +1,12 @@
 package com.company.servlet.user;
 
-import com.company.connection.ConnectionPool;
-import com.company.entity.Product;
 import com.company.entity.User;
 import com.company.mysql.MySQLProductDao;
 import com.company.mysql.MySQLUserDao;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
-import java.util.List;
 
 /**
  * This Servlet performs adding new User
@@ -28,7 +25,7 @@ public class NewUserServlet extends HttpServlet {
 
     private MySQLUserDao mySQLMySQLUserDao;
     private MySQLProductDao mySQLProductDao;
-
+    public final Logger log = LogManager.getLogger(NewUserServlet.class);
 
     public NewUserServlet() {
         super();
@@ -55,23 +52,15 @@ public class NewUserServlet extends HttpServlet {
         user.initUser(name, surname, login, md5Pass, false);
         mySQLMySQLUserDao.save(user);
 
-        if (user.getId() != 0) {
-            HttpSession session = request.getSession(true);
-            session.setAttribute("user", user);
-            session.setAttribute("locale","ru");
-            request.setAttribute("user", user);
-            request.setAttribute("locale", "ru");
-            List<Product> products = mySQLProductDao.findAll();
-            request.setAttribute("products", products);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("usebean.jsp");
-
-            if (dispatcher != null) {
-                dispatcher.forward(request, response);
-
-            }
-        } else {
-            response.sendRedirect("enterPage.jsp");
+        if(user.getId()!=0){
+            HttpSession httpSession = request.getSession(true); // create new session
+            httpSession.setAttribute("user",user); // add user to session
+            response.sendRedirect("/UserProductList");
+        }else{
+            response.sendRedirect("/page/startPage.jsp");
         }
+
+
 
     }
 

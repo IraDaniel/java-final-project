@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 public class ConnectionPool {
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
-    //public final Logger log = LogManager.getLogger( ConnectionPool.class);
+    public final Logger log = LogManager.getLogger( ConnectionPool.class);
     private String driverName;
     private String url;
     private String user;
@@ -44,7 +44,7 @@ public class ConnectionPool {
 
     }
 
-    public void initPoolData()/* throws ConnectionPoolException */{
+    public void initPoolData(){
         Locale.setDefault(Locale.ENGLISH);
         try {
 
@@ -58,22 +58,19 @@ public class ConnectionPool {
             }
 
         } catch (SQLException e) {
-           // log.warn("SQLException in ConnectionPool");
-            e.printStackTrace();
-           // throw new ConnectionPoolException("SQLException in ConnectionPool", e);
+            log.error("SQLException in ConnectionPool", e);
+
         } catch (ClassNotFoundException e) {
-          //  log.warn("Can't find database driver class");
-            e.printStackTrace();
-           // throw new ConnectionPoolException("Can't find database driver class", e);
+            log.error("\"Can't find database driver class", e);
+          //  e.printStackTrace();
+
 
         }
 
     }
 
     public void dispose() {
-
         clearConnectionQueue();
-
     }
 
     private void clearConnectionQueue() {
@@ -82,22 +79,20 @@ public class ConnectionPool {
             closeConnectionsQueue(givenAwayConQueue);
             closeConnectionsQueue(connectionQueue);
         } catch (SQLException e) {
-
-            // logger.log(Level.ERROR, "Error closing the com.company.connection.", e);
-
+            log.error("Error closing the com.company.connection.",e);
         }
 
     }
 
-    public Connection takeConnection() /*throws ConnectionPoolException*/ {
+    public Connection takeConnection(){
         Connection connection = null;
         try {
             connection = connectionQueue.take();
             givenAwayConQueue.add(connection);
         } catch (InterruptedException e) {
-          //  log.error("Error connecting to the data source.");
-            e.printStackTrace();
-         //   throw new ConnectionPoolException("Error connecting to the data source.", e);
+            log.error("Error connecting to the data source",e);
+
+
         }
 
         return connection;
@@ -109,19 +104,22 @@ public class ConnectionPool {
         try {
             con.close();
         } catch (SQLException e) {
-            // logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            log.error("Connection isn't return to the pool.");
+
         }
 
         try {
             rs.close();
         } catch (SQLException e) {
-            // logger.log(Level.ERROR, "ResultSet isn't closed.");
+            log.error("ResultSet isn't closed.");
+
         }
 
         try {
             st.close();
         } catch (SQLException e) {
-            // logger.log(Level.ERROR, "Statement isn't closed.");
+            log.error("Statement isn't closed.");
+
         }
 
     }
@@ -130,12 +128,12 @@ public class ConnectionPool {
         try {
             con.close();
         } catch (SQLException e) {
-            // logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            log.error("Connection isn't return to the pool.");
         }
         try {
             st.close();
         } catch (SQLException e) {
-            // logger.log(Level.ERROR, "Statement isn't closed.");
+            log.error("Statement isn't closed.");
         }
 
     }
@@ -143,8 +141,8 @@ public class ConnectionPool {
         try {
             con.close();
         } catch (SQLException e) {
-           // log.error("Connection isn't return to the pool.");
-            // logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            log.error("Connection isn't return to the pool.");
+
         }
 
     }

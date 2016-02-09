@@ -2,6 +2,8 @@ package com.company.mysql;
 
 import com.company.dao.ProductDao;
 import com.company.entity.Product;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public class MySQLProductDao extends CommonDao implements ProductDao{
 
+    public final Logger log = LogManager.getLogger(MySQLProductDao.class);
 
     public MySQLProductDao() {
       super();
@@ -28,6 +31,7 @@ public class MySQLProductDao extends CommonDao implements ProductDao{
         try {
             connection = cp.takeConnection();
             String sql = "SELECT id,name,price FROM product ";
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
 
@@ -40,7 +44,8 @@ public class MySQLProductDao extends CommonDao implements ProductDao{
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+           // e.printStackTrace();
         }finally {
             cp.closeConnection(connection,statement,resultSet);
         }
@@ -57,6 +62,7 @@ public class MySQLProductDao extends CommonDao implements ProductDao{
         try {
             connection = cp.takeConnection();
             String sql = "SELECT id,name,price FROM product where id = " + id;
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
             if(resultSet.first()){
@@ -66,7 +72,8 @@ public class MySQLProductDao extends CommonDao implements ProductDao{
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+
         }finally {
             cp.closeConnection(connection,statement,resultSet);
         }

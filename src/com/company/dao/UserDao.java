@@ -10,9 +10,11 @@ import java.util.List;
  */
 public interface UserDao {
 
-    void save(User user);
+    int save(User user);
 
     User findByLoginPass(String login, String password);
+
+    User findById(int id);
 
     List<User> findAll();
 

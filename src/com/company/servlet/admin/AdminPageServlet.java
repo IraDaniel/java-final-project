@@ -16,64 +16,36 @@ import java.util.List;
 
 
 /**
- *
+ * Page after authorization
  */
 
 @WebServlet("/AdminPageServlet")
 public class AdminPageServlet extends HttpServlet {
+    MySQLUserDao mySQLMySQLUserDao;
 
-    String page = "adminPage.jsp";
 
-    private List<User> getUserList(){
 
-        MySQLUserDao mySQLMySQLUserDao = new MySQLUserDao();
-
-        return mySQLMySQLUserDao.findAll();
+    public AdminPageServlet() {
+        super();
+        mySQLMySQLUserDao = new MySQLUserDao();
     }
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doPost(request,response);
-        // PrintWriter out = response.getWriter();
-    /*    List<User> userList = getUserList(); //getProductList();
-        request.setAttribute("users", userList);
-        // response.setContentType("text/html");
-// Переходим на JSP страницу
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-
-        if (dispatcher != null) {
-            dispatcher.forward(request, response);
-
-        }*/
-     /*   out.println("<html><head>");
-
-        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-
-        out.println("<title>Title</title>");
-        out.println("</head><body>");*/
-
-        //  System.out.println("!!!!!!!!!!!!!!" + products.get(1).toString());
-
-        // out.println("<h1> Hello, world!!! </h1>");
-        //  out.println(products.get(1).getName());
-        //   out.println("</body></html>");
-
-
-
-
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
 
-        List<User> userList = getUserList(); //getProductList();
-        request.setAttribute("users", userList);
+       // List<User> userList = getUserList(); //getProductList();
+        request.setAttribute("users", mySQLMySQLUserDao.findAll());
         // response.setContentType("text/html");
 // Переходим на JSP страницу
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/page/admin/adminEnterPage.jsp");
 
         if (dispatcher != null) {
             dispatcher.forward(request, response);

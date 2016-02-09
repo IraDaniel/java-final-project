@@ -18,14 +18,15 @@ public class ExitServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doPost(request,response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession httpSession = request.getSession(false);
+        HttpSession httpSession = request.getSession();
         httpSession.invalidate();
-        response.sendRedirect("enterPage.jsp");
+        response.sendRedirect("/page/startPage.jsp");
 
 
     }

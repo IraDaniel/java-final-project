@@ -11,13 +11,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Ira on 05.02.2016.
+ * Created by Ira on 09.02.2016.
  */
-@WebServlet("/PaymentServlet")
-public class PaymentServlet extends HttpServlet {
+@WebServlet("/DeleteOrderServlet")
+public class DeleteOrderServlet extends HttpServlet {
     MySQLOrderDao mySQLOrderDao;
 
-    public PaymentServlet() {
+    public DeleteOrderServlet() {
         super();
         mySQLOrderDao = new MySQLOrderDao();
     }
@@ -30,9 +30,9 @@ public class PaymentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-     //   HttpSession httpSession = request.getSession(false);
+        //HttpSession httpSession = request.getSession(false);
         int idOrder = Integer.parseInt(request.getParameterValues("idOrder")[0]);
-        mySQLOrderDao.updateInfo(idOrder,1);
+        mySQLOrderDao.delete(idOrder);
         response.sendRedirect("/UserProductList");
 
 

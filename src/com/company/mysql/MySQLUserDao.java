@@ -2,6 +2,8 @@ package com.company.mysql;
 
 import com.company.dao.UserDao;
 import com.company.entity.User;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,32 +17,64 @@ import java.util.List;
  */
 public class MySQLUserDao extends CommonDao implements UserDao {
 
-
+    public final Logger log = LogManager.getLogger(MySQLUserDao.class);
     public MySQLUserDao() {
         super();
     }
 
-    public void save(User user) {
+    public User findById(int id){
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
+        User user = new User();
+        try {
+            connection = cp.takeConnection();
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String sql = "SELECT name,surname,login,isBlack FROM user where id = " + id;
+            log.debug(sql);
+            resultSet = statement.executeQuery(sql);
+            if(resultSet.first()){
+                user.setId(id);
+                user.setName(resultSet.getString("name"));
+                user.setSurname(resultSet.getString("surname"));
+                user.setLogin(resultSet.getString("login"));
+                if (resultSet.getInt("isBlack") == 1) {
+                    user.setIsBlack(true);
+                } else {
+                    user.setIsBlack(false);
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            cp.closeConnection(connection, statement, resultSet);
+        }
+        return user;
+    }
+
+    public int save(User user) {
+        Connection connection = null;
+        Statement statement = null;
+        int id = 0;
         try {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            int id = getNextId("user");
+            id = getNextId("user");
             user.setId(id);
             int isBlack = 0;
             if (user.isBlack()) isBlack = 1;
             String sql = "insert into user values (" + id + ", '" + user.getName() + "', '" + user.getSurname() + "', '" + user.getLogin() + "', '" + user.getPassword() + "', " + isBlack + ")";
-
+            log.debug(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
-
+          //  e.printStackTrace();
+            log.error(e);
         } finally {
 
             cp.closeConnection(connection, statement);
         }
-
+        return id;
 
     }
 
@@ -54,6 +88,7 @@ public class MySQLUserDao extends CommonDao implements UserDao {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String sql = "SELECT id,name,surname,login,isBlack FROM user ";
+            log.debug(sql);
             resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
@@ -67,10 +102,13 @@ public class MySQLUserDao extends CommonDao implements UserDao {
                 } else {
                     user.setIsBlack(false);
                 }
+                userList.add(user);
             }
 
+
         } catch (SQLException e) {
-            e.printStackTrace();
+         //   e.printStackTrace();
+            log.error(e);
         } finally {
             cp.closeConnection(connection, statement, resultSet);
         }
@@ -85,7 +123,7 @@ public class MySQLUserDao extends CommonDao implements UserDao {
         try {
             connection = cp.takeConnection();
             String sql = "SELECT id,name,surname,isBlack FROM user where login = '" + login + "' and password = '" + password + "'";
-            //System.out.println(sql);
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
             if (resultSet.first()) {
@@ -103,7 +141,8 @@ public class MySQLUserDao extends CommonDao implements UserDao {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
+            log.error(e);
         } finally {
             cp.closeConnection(connection, statement, resultSet);
         }
@@ -119,6 +158,7 @@ public class MySQLUserDao extends CommonDao implements UserDao {
         try {
             connection = cp.takeConnection();
             String sql = "SELECT id,name,surname,login FROM user where isBlack = 1";
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
 
@@ -133,7 +173,8 @@ public class MySQLUserDao extends CommonDao implements UserDao {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
+            log.error(e);
         } finally {
             cp.closeConnection(connection, statement, resultSet);
         }
@@ -148,10 +189,11 @@ public class MySQLUserDao extends CommonDao implements UserDao {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "update user set isBlack = " + isBlack + " where id = " + idUser;
-            // System.out.println(sql);
+            log.debug(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
+            log.error(e);
         } finally {
             cp.closeConnection(connection, statement);
         }

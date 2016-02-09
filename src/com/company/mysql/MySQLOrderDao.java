@@ -4,6 +4,8 @@ import com.company.dao.OrderDao;
 import com.company.entity.Order;
 import com.company.entity.Product;
 import com.company.entity.User;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,7 +19,7 @@ import java.util.List;
  */
 public class MySQLOrderDao extends CommonDao implements OrderDao {
 
-
+    public final Logger log = LogManager.getLogger(MySQLOrderDao.class);
     public MySQLOrderDao() {
         super();
     }
@@ -29,11 +31,12 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         ResultSet resultSet = null;
         try {
             connection = cp.takeConnection();
-            String sql = "SELECT id,idProduct,number FROM `order` where id = " + idOrder;
+            String sql = "SELECT idUser,idProduct,number,isPaid FROM `order` where id = " + idOrder;
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
             if(resultSet.next()){
-                order.setId(resultSet.getInt("id"));
+                order.setId(idOrder);
                 order.setIdUser(resultSet.getInt("idUser"));
                 order.setIdProduct(resultSet.getInt("idProduct"));
                 order.setNumber(resultSet.getInt("number"));
@@ -43,7 +46,8 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+
         } finally {
             cp.closeConnection(connection, statement, resultSet);
         }
@@ -52,7 +56,34 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
     }
 
     public List<Order> findAll() {
-        return null;
+        List<Order> orderList = new ArrayList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = cp.takeConnection();
+            String sql = "SELECT id,idUser,idProduct,number,isPaid FROM `order`";
+            log.debug(sql);
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getInt("id"));
+                order.setIdUser(resultSet.getInt("idUser"));
+                order.setIdProduct(resultSet.getInt("idProduct"));
+                order.setNumber(resultSet.getInt("number"));
+                if (resultSet.getInt("isPaid") == 1) {
+                    order.setIsPaid(true);
+                }
+                orderList.add(order);
+
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            cp.closeConnection(connection, statement, resultSet);
+        }
+        return orderList;
     }
 
     /**
@@ -73,10 +104,11 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
                 isPaid = 1;
             }
             String sql = "insert into `order` values (" + id + " , " + order.getIdUser() + " , " + order.getIdProduct() + " , " + order.getNumber() + " , " + isPaid + ")";
-            System.out.println(sql);
+            log.debug(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+           // e.printStackTrace();
         } finally {
             cp.closeConnection(connection, statement);
         }
@@ -97,9 +129,9 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         try {
             connection = cp.takeConnection();
             String sql = "SELECT id,idProduct,number,isPaid FROM `order` where idUser = " + idUser;
+            log.debug(sql);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(sql);
-
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setId(resultSet.getInt("id"));
@@ -113,7 +145,8 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
 
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+           // e.printStackTrace();
         } finally {
             cp.closeConnection(connection, statement, resultSet);
         }
@@ -130,10 +163,12 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
         try {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            String query = "delete from `order` where id = " + idOrder;
-            statement.executeUpdate(query);
+            String sql = "delete from `order` where id = " + idOrder;
+            log.debug(sql);
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+          //  e.printStackTrace();
         } finally {
             cp.closeConnection(connection, statement);
         }
@@ -146,14 +181,47 @@ public class MySQLOrderDao extends CommonDao implements OrderDao {
             connection = cp.takeConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "update `order` set isPaid = " + 1 + " where id = " + idOrder;
+            log.debug(sql);
             // System.out.println(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
+          //  e.printStackTrace();
         } finally {
             cp.closeConnection(connection, statement);
         }
 
+    }
+
+    public List<Order> findUnpaidOrderByIdUser(int idUser){
+        List<Order> orderList = new ArrayList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = cp.takeConnection();
+            String sql = "SELECT id,idProduct,number FROM `order` where idUser = " + idUser + " and isPaid = 0";
+            log.debug(sql);
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getInt("id"));
+                order.setIdUser(idUser);
+                order.setIdProduct(resultSet.getInt("idProduct"));
+                order.setNumber(resultSet.getInt("number"));
+                order.setIsPaid(false);
+                orderList.add(order);
+
+            }
+        } catch (SQLException e) {
+            log.error(e);
+          //  e.printStackTrace();
+        } finally {
+            cp.closeConnection(connection, statement, resultSet);
+        }
+        return orderList;
     }
 
 }

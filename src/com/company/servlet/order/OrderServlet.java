@@ -44,27 +44,31 @@ public class OrderServlet extends HttpServlet {
 
         if(session == null){
             request.setCharacterEncoding("utf-8");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("enterPage.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/enterPage.jsp");
             if (dispatcher != null) {
                 dispatcher.forward(request, response);
             }
         }
-        //TODO: Check, if user == null ?
+
         User user = (User)session.getAttribute("user");
+        if(user == null) {
+            response.sendRedirect("/page/startPage.jsp");
+            return;
+        }
+        Integer number = Integer.parseInt(request.getParameterValues("number")[0]);
+        System.out.println(number);
         Integer idProduct = Integer.parseInt(request.getParameterValues("id")[0]);
 
         Order order = new Order();
-        order.initOrder(user.getId(),idProduct,1,false);
+        order.initOrder(user.getId(),idProduct,number,false);
         int idOrder = mySQLOrderDao.save(order);
 
         request.setAttribute("idOrder", idOrder);
         session.setAttribute("idOrder", idOrder);
-        System.out.println(session.getAttribute("idOrder"));
 
-       // mySQLUserDao.updateInfo(user.getId(),1);
 
         request.setCharacterEncoding("utf-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("orderPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/orderPage.jsp");
 
         if (dispatcher != null) {
             dispatcher.forward(request, response);

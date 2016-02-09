@@ -1,10 +1,9 @@
-package com.company.servlet.user;
+package com.company.servlet.admin;
 
 import com.company.entity.User;
-import com.company.mysql.MySQLProductDao;
-import com.company.mysql.MySQLUserDao;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,22 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 /**
- * Created by Ira on 02.02.2016.
+ * Created by Ira on 08.02.2016.
  */
-@WebServlet("/EnterPageServlet")
-public class EnterPageServlet extends HttpServlet {
-
-    private MySQLUserDao mySQLMySQLUserDao;
-    private MySQLProductDao mySQLProductDao;
-
-    public EnterPageServlet() {
+@WebServlet("/AdminEnterPageServlet")
+public class AdminEnterPageServlet extends HttpServlet {
+    public AdminEnterPageServlet() {
         super();
-        mySQLMySQLUserDao = new MySQLUserDao();
-        mySQLProductDao = new MySQLProductDao();
     }
-
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -42,18 +35,23 @@ public class EnterPageServlet extends HttpServlet {
         // getParam
         String login = request.getParameterValues("login")[0];
         String password = request.getParameterValues("password")[0];
-        //CheckUser
-        User user = mySQLMySQLUserDao.findByLoginPass(login, DigestUtils.md5Hex(password));
 
-        if(user.getId()!=0){
-            HttpSession httpSession = request.getSession(true); // create new session
-            httpSession.setAttribute("user",user); // add user to session
-            //httpSession.setAttribute("locale","ru"); // add location to session
-            response.sendRedirect("/UserProductList");
+        ResourceBundle bundle = ResourceBundle.getBundle("admin");
+
+        String pLogin = bundle.getString("admin.login");
+        String pPassword = bundle.getString("admin.password");
+
+        if(pLogin.equals(login) && pPassword.equals(password)){
+            response.sendRedirect("/OrderListServlet");
         }else{
-            response.sendRedirect("/page/user/enterPage.jsp");
+            response.sendRedirect("/page/startPage.jsp");
         }
 
-    }
+        //Check login + password
 
+     //   System.out.println(login + ":" + password);
+
+
+
+    }
 }

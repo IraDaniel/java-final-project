@@ -38,7 +38,7 @@
     <div class="header">
       <ul class="nav nav-pills pull-right">
         <li class="active"><a href="">Войти</a></li>
-        <li><a href="newUser.jsp">Зарегистрироваться</a></li>
+        <li><a href="userPage/newUser.jsp">Зарегистрироваться</a></li>
       </ul>
       <h3 class="text-muted">Project name</h3>
     </div>

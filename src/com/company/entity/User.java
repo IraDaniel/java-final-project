@@ -66,4 +66,8 @@ public class User {
         this.password = password;
         this.isBlack = isBlack;
     }
+
+    public String getNameSurname(){
+        return name + " " + surname;
+    }
 }

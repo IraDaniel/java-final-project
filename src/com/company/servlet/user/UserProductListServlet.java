@@ -3,7 +3,6 @@ package com.company.servlet.user;
 import com.company.entity.Product;
 import com.company.entity.User;
 import com.company.mysql.MySQLProductDao;
-import com.company.mysql.MySQLUserDao;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,15 +32,21 @@ public class UserProductListServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
         HttpSession httpSession = request.getSession(true); // create new session
         User user = (User) httpSession.getAttribute("user"); // add user to session
+        if(user == null) {
+            response.sendRedirect("/page/startPage.jsp");
+            return;
+        }
         String local = (String) httpSession.getAttribute("locale"); // add location to session
         request.setAttribute("user", user);
         request.setAttribute("locale", local);
         List<Product> products = mySQLProductDao.findAll();
         request.setAttribute("products", products);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("usebean.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/usebean.jsp");
 
         if (dispatcher != null) {
             dispatcher.forward(request, response);
