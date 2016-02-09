@@ -24,10 +24,11 @@ import java.util.List;
 * Show all users and their debts
 * */
 @WebServlet("/UserListServlet")
-public class UserListServlet extends HttpServlet{
+public class UserListServlet extends HttpServlet {
     MySQLUserDao mySQLUserDao;
     MySQLProductDao mySQLProductDao;
     MySQLOrderDao mySQLOrderDao;
+
     public UserListServlet() {
         super();
         mySQLUserDao = new MySQLUserDao();
@@ -44,11 +45,11 @@ public class UserListServlet extends HttpServlet{
         List<Double> debtList = new ArrayList<>();
         double debt = 0.0;
 
-        for(User user: userList){
-            List<Order> orderList = mySQLOrderDao.findOrderByIdUserPaid(user.getId(),0);
+        for (User user : userList) {
+            List<Order> orderList = mySQLOrderDao.findOrderByIdUserPaid(user.getId(), 0);
 
-            for(Order order: orderList){
-                debt+= (mySQLProductDao.findById(order.getIdProduct()).getPrice()*order.getNumber());
+            for (Order order : orderList) {
+                debt += (mySQLProductDao.findById(order.getIdProduct()).getPrice() * order.getNumber());
             }
             debtList.add(debt);
             debt = 0;
@@ -63,7 +64,6 @@ public class UserListServlet extends HttpServlet{
             dispatcher.forward(request, response);
 
         }
-
 
 
     }

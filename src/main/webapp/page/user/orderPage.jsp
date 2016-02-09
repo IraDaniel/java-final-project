@@ -27,11 +27,6 @@
     double price = order.getNumber() * product.getPrice();
 
 
-    //  String id = (String)session.getAttribute("idOrder");
-    System.out.println(session.getAttribute("idOrder"));
-
-    //  int idOrder = Integer.parseInt(id);
-    ;
 %>
 
 <div class="navbar navbar-default navbar-static-top" role="navigation">

@@ -18,11 +18,9 @@ import java.util.List;
 /**
  * Page after authorization
  */
-
 @WebServlet("/AdminPageServlet")
 public class AdminPageServlet extends HttpServlet {
     MySQLUserDao mySQLMySQLUserDao;
-
 
 
     public AdminPageServlet() {
@@ -33,18 +31,13 @@ public class AdminPageServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
-       // List<User> userList = getUserList(); //getProductList();
         request.setAttribute("users", mySQLMySQLUserDao.findAll());
-        // response.setContentType("text/html");
-// Переходим на JSP страницу
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("/page/admin/adminEnterPage.jsp");
 
         if (dispatcher != null) {

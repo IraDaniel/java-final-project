@@ -21,7 +21,7 @@
 <%
     String loc = (String) request.getSession(false).getAttribute("locale");
     PropertyManager utilProperty = new PropertyManager(new Locale(loc, loc.toUpperCase()), "util");
-    User user = (User)request.getSession(false).getAttribute("user");
+    User user = (User) request.getSession(false).getAttribute("user");
 %>
 
 <div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -42,7 +42,8 @@
 
 
         <ul class="nav navbar-nav navbar-right">
-            <li> <%= user.getNameSurname()%> </li>
+            <li><%= user.getNameSurname()%>
+            </li>
             <li><a href="/LocaleServlet?loc=ru&url=/UserProductList">ru</a></li>
             <li><a href="/LocaleServlet?loc=en&url=/UserProductList">en</a></li>
         </ul>
@@ -56,18 +57,18 @@
         <p class="lead">
 
         <table border="1" width="303" class="table">
-        <thead>
+            <thead>
 
-                <th width="35%"><b><%= utilProperty.getValue("util.name")%>
-                </b></th>
-                <th width="15%"><b><%= utilProperty.getValue("util.price")%>
-                </b></th>
-                <th width="35%"><b><%= utilProperty.getValue("util.number")%>
-                </b></th>
-                <th width="15%"><b></b></th>
+            <th width="35%"><b><%= utilProperty.getValue("util.name")%>
+            </b></th>
+            <th width="15%"><b><%= utilProperty.getValue("util.price")%>
+            </b></th>
+            <th width="35%"><b><%= utilProperty.getValue("util.number")%>
+            </b></th>
+            <th width="15%"><b></b></th>
 
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <% List<Product> data2 = (List) request.getAttribute("products");
                 for (Product product : data2) {
             %>
@@ -76,7 +77,7 @@
                 </td>
                 <td><%=product.getPrice()%>
                 </td>
-                <form action="/OrderServlet" method="get">
+                <form action="/SaveOrder" method="post">
                     <td>
                         <input type="number" min="1" value="1" name="number">
                     </td>
@@ -91,7 +92,7 @@
 
 
             <%}%>
-        </tbody>
+            </tbody>
         </table>
         </p>
 

@@ -24,13 +24,12 @@ public class DeleteOrderServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      //  doPost(request, response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        //HttpSession httpSession = request.getSession(false);
         int idOrder = Integer.parseInt(request.getParameterValues("idOrder")[0]);
         mySQLOrderDao.delete(idOrder);
         response.sendRedirect("/UserProductList");

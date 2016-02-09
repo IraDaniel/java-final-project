@@ -35,14 +35,16 @@ public class OrderServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+
         HttpSession session = request.getSession(false);
 
-        if(session == null){
+        if (session == null) {
             request.setCharacterEncoding("utf-8");
             RequestDispatcher dispatcher = request.getRequestDispatcher("/page/user/enterPage.jsp");
             if (dispatcher != null) {
@@ -50,20 +52,12 @@ public class OrderServlet extends HttpServlet {
             }
         }
 
-        User user = (User)session.getAttribute("user");
-        if(user == null) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
             response.sendRedirect("/page/startPage.jsp");
             return;
         }
-        Integer number = Integer.parseInt(request.getParameterValues("number")[0]);
-        System.out.println(number);
-        Integer idProduct = Integer.parseInt(request.getParameterValues("id")[0]);
-
-        Order order = new Order();
-        order.initOrder(user.getId(),idProduct,number,false);
-        int idOrder = mySQLOrderDao.save(order);
-
-        request.setAttribute("idOrder", idOrder);
+        int idOrder = Integer.parseInt(request.getParameterValues("id")[0]);
         session.setAttribute("idOrder", idOrder);
 
 

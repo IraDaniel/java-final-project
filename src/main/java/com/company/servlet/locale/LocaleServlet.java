@@ -26,8 +26,9 @@ public class LocaleServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -36,10 +37,8 @@ public class LocaleServlet extends HttpServlet {
         // String loc = httpSession.getAttribute
         String loc = request.getParameterValues("loc")[0];
         String url = request.getParameterValues("url")[0];
-        httpSession.setAttribute("locale",loc);
+        httpSession.setAttribute("locale", loc);
         response.sendRedirect(url);
-
-
 
 
     }

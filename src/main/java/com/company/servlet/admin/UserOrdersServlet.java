@@ -37,20 +37,17 @@ public class UserOrdersServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request,response);
+        doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int id = Integer.parseInt(request.getParameterValues("id")[0]);
-        //HttpSession session = request.getSession();
-      // User user = (User)session.getAttribute("user");
 
         List<Order> orderList = mySQLOrderDao.findByIdUser(id);
         User user = mySQLUserDao.findById(id);
-        request.setAttribute("orders",orderList);
-        request.setAttribute("user",user);
-      //  request.setAttribute("name",user.getNameSurname());
+        request.setAttribute("orders", orderList);
+        request.setAttribute("user", user);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/page/admin/userOrders.jsp");
 

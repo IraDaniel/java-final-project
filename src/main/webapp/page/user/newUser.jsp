@@ -26,9 +26,11 @@
 
         <ul class="nav navbar-nav navbar-left">
             <li><a href="/page/startPage.jsp"><%= utilProperty.getValue("util.product")%>
-            <li class="active"><a href="/page/user/newUser.jsp?change=<%=isChange%>"><%= utilProperty.getValue("util.register")%></a></li>
-            <li><a href="/page/user/enterPage.jsp"><%= utilProperty.getValue("util.signIn")%>
-            </a></li>
+                <li class="active"><a
+                        href="/page/user/newUser.jsp?change=<%=isChange%>"><%= utilProperty.getValue("util.register")%>
+                </a></li>
+                <li><a href="/page/user/enterPage.jsp"><%= utilProperty.getValue("util.signIn")%>
+                </a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/LocaleServlet?loc=ru&url=/page/user/newUser.jsp?change=<%=isChange%>">ru</a></li>
@@ -40,14 +42,19 @@
 </div>
 <div class="container">
     <p class="lead">
-    <%  if(isChange == 1){ %>
-       <p> <%= utilProperty.getValue("util.change")%>
+            <%  if(isChange == 1){ %>
+
+    <div class="alert alert-danger"><%= utilProperty.getValue("util.change")%>
+    </div>
     <% }%>
 
 
     <form action="/NewUserServlet" method="post" class="form-signin">
         <input type="hidden" name="command" value="naming"/>
-        Заполните форму регистрации<br/>
+
+        <div class="alert alert-info"><%= utilProperty.getValue("util.regForm")%>
+        </div>
+        <br/>
         <%=utilProperty.getValue("util.userFirstName")%>:<br/> <input type="text" name="name" class="form-control">
         <br/>
         <%=utilProperty.getValue("util.userLastName")%>:<br/> <input type="text" name="surname"
@@ -56,7 +63,8 @@
         <%=utilProperty.getValue("util.password")%> <br/><input type="password" name="password"
                                                                 class="form-control"><br/>
         <br/>
-        <button type="submit" class="btn btn-default">Сохранить</button>
+        <button type="submit" class="btn btn-default"><%= utilProperty.getValue("util.save")%>
+        </button>
     </form>
     </p>
 

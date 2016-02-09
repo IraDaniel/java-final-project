@@ -9,8 +9,18 @@ import java.util.List;
  */
 public interface ProductDao {
 
+
+    /**
+     * Find product by ID
+     * @param id ID product
+     * @return
+     */
     Product findById(int id);
 
+    /**
+     * Find all products
+     * @return list of products
+     */
     List<Product> findAll();
 
 }

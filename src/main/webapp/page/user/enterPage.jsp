@@ -31,10 +31,10 @@
 
         <ul class="nav navbar-nav navbar-left">
             <li><a href="/page/startPage.jsp"><%= utilProperty.getValue("util.product")%>
-            <li><a href="/page/user/newUser.jsp?change=0"><%= utilProperty.getValue("util.register")%>
-            </a></li>
-            <li class="active"><a href="/page/user/enterPage.jsp"><%= utilProperty.getValue("util.signIn")%>
-            </a></li>
+                <li><a href="/page/user/newUser.jsp?change=0"><%= utilProperty.getValue("util.register")%>
+                </a></li>
+                <li class="active"><a href="/page/user/enterPage.jsp"><%= utilProperty.getValue("util.signIn")%>
+                </a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/LocaleServlet?loc=ru&url=/page/user/enterPage.jsp">ru</a></li>

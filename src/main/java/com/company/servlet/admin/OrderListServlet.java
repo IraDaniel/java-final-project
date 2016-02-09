@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Show all orders
  */
-
 @WebServlet("/OrderListServlet")
 public class OrderListServlet extends HttpServlet {
     MySQLOrderDao mySQLOrderDao;
@@ -29,9 +28,7 @@ public class OrderListServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Order> orderList = mySQLOrderDao.findAll();
-
         request.setAttribute("orders", orderList);
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("/page/admin/adminPage.jsp");
 
         if (dispatcher != null) {
@@ -40,6 +37,6 @@ public class OrderListServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
 }

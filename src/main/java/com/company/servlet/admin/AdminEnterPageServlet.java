@@ -27,6 +27,7 @@ public class AdminEnterPageServlet extends HttpServlet {
         doPost(request, response);
 
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -41,16 +42,12 @@ public class AdminEnterPageServlet extends HttpServlet {
         String pLogin = bundle.getString("admin.login");
         String pPassword = bundle.getString("admin.password");
 
-        if(pLogin.equals(login) && pPassword.equals(password)){
+        // Check login and password
+        if (pLogin.equals(login) && pPassword.equals(password)) {
             response.sendRedirect("/OrderListServlet");
-        }else{
+        } else {
             response.sendRedirect("/page/startPage.jsp");
         }
-
-        //Check login + password
-
-     //   System.out.println(login + ":" + password);
-
 
 
     }
